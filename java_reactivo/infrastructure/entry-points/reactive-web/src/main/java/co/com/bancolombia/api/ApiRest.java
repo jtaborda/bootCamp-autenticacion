@@ -4,6 +4,8 @@ import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDTOMapper;
 import co.com.bancolombia.usecase.user.UserUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,26 +14,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@Tag(name = "Usuarios", description = "API para manejo de usuarios")
 @RestController
-@RequestMapping(value = "/api/v1/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class ApiRest {
 
+    private static final Logger logger = LoggerFactory.getLogger(ApiRest.class);
     private final UserUseCase userUseCase;
     private final UserDTOMapper userMapper ;
+
+    @Operation(summary = "Crear un nuevo usuario")
     @PostMapping
     public Mono<ResponseEntity<Void>> createUser(@Valid @RequestBody CreateUserDto createUserDTO) {
+        logger.info("Creando usuario");
         return userUseCase.saveUser(userMapper.toModel(createUserDTO))
                 .then(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
     }
 
+    @Operation(summary = "Obtener todos los usuarios")
     @GetMapping
     public Flux<UserDto> getAllUser() {
         return userUseCase.getAllUser()
                 .map(userMapper::toResponse);
     }
 
+    @Operation(summary = "Obtener usuario por número de identificación")
     @GetMapping("/{idNumber}")
     public Mono<ResponseEntity<UserDto>> getByIdNumber(@PathVariable("idNumber") long idNumber) {
         return userUseCase.getUserByIdNumber(idNumber)
@@ -40,6 +51,7 @@ public class ApiRest {
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
+    @Operation(summary = "Eliminar usuario por número de identificación")
     @DeleteMapping("/{idNumber}")
     public Mono<ResponseEntity<Void>> deleteUser(@PathVariable("idNumber") long idNumber) {
         return userUseCase.deleteUserByCorreo(idNumber)

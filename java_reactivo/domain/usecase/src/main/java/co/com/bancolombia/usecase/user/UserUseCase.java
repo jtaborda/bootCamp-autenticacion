@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 @RequiredArgsConstructor
 public class UserUseCase {
 
@@ -16,7 +17,6 @@ public class UserUseCase {
         return userRepository.getUserByCorreo(user.getCorreo())
                 .flatMap(exists -> {
                     if (exists) {
-                        //       log.warn("Intento de registro con correo ya existente: {}", user.getCorreo());
                         return Mono.error(new EmailAlreadyExistsException(
                                 "El correo ya está registrado: " + user.getCorreo()));
                     }
@@ -25,12 +25,15 @@ public class UserUseCase {
                 });
     }
 
-    public Flux<User> getAllUser(){
+    public Flux<User> getAllUser()
+    {
         return userRepository.getAllUser();
     }
     public Mono<User> getUserByIdNumber(Long idNumber){
         return userRepository.getUserByIdNumber(idNumber);
     }
     public Mono<Void> deleteUserByCorreo(Long idNumber)
-    { return userRepository.deleteUserById(idNumber); }
+    {
+        return userRepository.deleteUserById(idNumber);
+    }
 }
