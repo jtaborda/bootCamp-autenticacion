@@ -1,0 +1,10 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  nombre VARCHAR(255),
+  apellido VARCHAR(255),
+  fecha_nacimiento DATE,
+  telefono VARCHAR(20),
+  direccion VARCHAR(255),
+  salario NUMERIC,
+  correo VARCHAR(255) UNIQUE
+);
