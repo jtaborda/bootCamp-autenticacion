@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres17_db:
+    image: postgres:17
+    container_name: postgres17_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "test"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "P@55w0rd"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres17_db_data:/var/lib/postgresql/data
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@test.com"
+      PGADMIN_DEFAULT_PASSWORD: "test"
+    ports:
+      - "8088:80"
+
+volumes:
+  postgres17_db_data:
