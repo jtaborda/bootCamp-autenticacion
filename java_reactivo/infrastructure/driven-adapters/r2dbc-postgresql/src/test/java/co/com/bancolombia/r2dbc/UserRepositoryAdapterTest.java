@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.reactivecommons.utils.ObjectMapper;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -23,16 +24,20 @@ class UserRepositoryAdapterTest {
 
     @InjectMocks
     private UserRepositoryAdapter adapter;
+    @Mock
+    private TransactionalOperator transactionalOperator;
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.openMocks(this);
-        adapter = new UserRepositoryAdapter(repository, mapper);
+        when(transactionalOperator.transactional(any(Mono.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        adapter = new UserRepositoryAdapter(repository, mapper, transactionalOperator);
+
     }
 
     @Test
     void saveUser_shouldReturnSavedUser() {
-        User domainUser = new User(); // agrega setters si es necesario
+        User domainUser = new User(); 
         userEntity entity = new userEntity();
         entity.setId(1L);
 
