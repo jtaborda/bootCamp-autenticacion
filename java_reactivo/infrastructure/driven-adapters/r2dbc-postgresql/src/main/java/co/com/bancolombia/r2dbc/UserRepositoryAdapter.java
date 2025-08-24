@@ -7,6 +7,7 @@ import co.com.bancolombia.r2dbc.exception.UserNotFoundException;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,14 +18,20 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         Long,
         UserReactiveRepository
 > implements UserRepository{
-    public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
+
+    private final TransactionalOperator transactionalOperator;
+
+
+    public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity, User.class));
+        this.transactionalOperator = transactionalOperator;
     }
 
 
     @Override
     public Mono<User> saveUser(User user){
-        return super.save(user);
+        return super.save(user)
+         .as(transactionalOperator::transactional);//roolback
     }
     @Override
     public Flux<User> getAllUser() {
@@ -39,7 +46,8 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     public Mono<Void> deleteUserById(Long id) {
         return repository.findById(id)                 .switchIfEmpty(Mono.error(new UserNotFoundException("No se encontró usuario ")))
-                .flatMap(userEntity -> repository.deleteById(userEntity.getId().longValue()));
+                .flatMap(userEntity -> repository.deleteById(userEntity.getId().longValue()))
+                .as(transactionalOperator::transactional);
     }
 
 
