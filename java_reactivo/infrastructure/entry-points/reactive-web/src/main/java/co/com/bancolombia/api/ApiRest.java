@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Tag(name = "Usuarios", description = "API para manejo de usuarios")
 @RestController
@@ -23,14 +21,13 @@ import org.slf4j.LoggerFactory;
 @AllArgsConstructor
 public class ApiRest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiRest.class);
+
     private final UserUseCase userUseCase;
     private final UserDTOMapper userMapper ;
 
     @Operation(summary = "Crear un nuevo usuario")
     @PostMapping
     public Mono<ResponseEntity<Void>> createUser(@Valid @RequestBody CreateUserDto createUserDTO) {
-        logger.info("Creando usuario");
         return userUseCase.saveUser(userMapper.toModel(createUserDTO))
                 .then(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
     }
