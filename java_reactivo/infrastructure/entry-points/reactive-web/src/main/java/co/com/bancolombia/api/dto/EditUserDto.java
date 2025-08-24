@@ -7,5 +7,5 @@ public record EditUserDto(String nombre,
                           Integer telefono,
                           String direccion,
                           String correo,
-                          Long salario) {
+                          Long salario,Long documento) {
 }

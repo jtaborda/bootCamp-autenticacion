@@ -8,3 +8,6 @@ CREATE TABLE users (
   salario NUMERIC,
   correo VARCHAR(255) UNIQUE
 );
+
+
+docker run -it postgres:17 psql -U postgres

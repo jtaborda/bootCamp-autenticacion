@@ -21,7 +21,6 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
 
     private final TransactionalOperator transactionalOperator;
 
-
     public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity, User.class));
         this.transactionalOperator = transactionalOperator;
@@ -56,5 +55,10 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         return repository.findByCorreo(correo)
                 .map(userEntity -> true)
                 .defaultIfEmpty(false);
+    }
+    @Override
+    public Mono<User> findByDocumento(Long document) {
+        return repository.findByDocumento(document)
+                .map(entity -> mapper.map(entity, User.class));
     }
 }

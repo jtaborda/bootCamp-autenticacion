@@ -1,0 +1,21 @@
+
+
+sudo service docker start
+
+
+docker compose -f C:\Users\jptaborda\Desktop\Curso Aws\bootCampS1-1.0\java_reactivo\local_enviroment/docker-compose.yml up -d
+
+
+
+docker compose -f "/mnt/c/Users/jptaborda/Desktop/Curso Aws/bootCampS1-1.0/java_reactivo/local_enviroment/docker-compose.yml" up
+
+
+
+docker run --name my-postgres -e POSTGRES_PASSWORD=mi_clave -p 5432:5432 -d postgres:17
+
+
+docker run -d --name my_postgres -e POSTGRES_PASSWORD=miPassword -p 5432:5432 postgres:17
+docker run -it postgres:17 psql -U postgres
+
+
+docker start my_postgres

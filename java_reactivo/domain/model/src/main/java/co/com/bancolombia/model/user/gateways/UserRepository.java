@@ -13,5 +13,6 @@ public interface UserRepository {
     Mono<User>  getUserByIdNumber(Long idNumber);
 
     Mono<Void> deleteUserById(Long id);
-    Mono<Boolean>  getUserByCorreo(String correo);
+    Mono<Boolean> getUserByCorreo(String correo);
+    Mono<User> findByDocumento(Long id);
 }

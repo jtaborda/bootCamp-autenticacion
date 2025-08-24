@@ -20,4 +20,5 @@ public class User
     private String direccion;
     private String correo;
     private Long salario;
+    private Long documento;
 }

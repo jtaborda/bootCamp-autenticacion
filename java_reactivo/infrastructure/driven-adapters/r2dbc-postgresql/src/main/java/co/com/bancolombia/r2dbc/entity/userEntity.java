@@ -24,4 +24,5 @@ public class userEntity {
     private String direccion;
     private Long salario;
     private String correo;
+    private Long documento;
 }

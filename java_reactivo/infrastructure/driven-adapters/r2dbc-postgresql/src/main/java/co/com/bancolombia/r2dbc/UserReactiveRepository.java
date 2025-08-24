@@ -9,4 +9,5 @@ public interface UserReactiveRepository
         extends ReactiveCrudRepository
         <userEntity, Long>, ReactiveQueryByExampleExecutor<userEntity> {
     Mono<userEntity> findByCorreo(String correo);
+    Mono<userEntity>  findByDocumento(Long document);
 }
