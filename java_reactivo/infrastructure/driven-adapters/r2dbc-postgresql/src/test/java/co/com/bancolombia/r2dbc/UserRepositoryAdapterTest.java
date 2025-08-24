@@ -37,7 +37,7 @@ class UserRepositoryAdapterTest {
 
     @Test
     void saveUser_shouldReturnSavedUser() {
-        User domainUser = new User(); 
+        User domainUser = new User();
         userEntity entity = new userEntity();
         entity.setId(1L);
 
