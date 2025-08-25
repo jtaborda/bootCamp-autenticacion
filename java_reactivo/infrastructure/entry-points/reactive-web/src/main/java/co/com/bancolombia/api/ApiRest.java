@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +23,16 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class ApiRest {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(ApiRest.class);
     private final UserUseCase userUseCase;
     private final UserDTOMapper userMapper ;
 
     @Operation(summary = "Crear un nuevo usuario")
     @PostMapping
     public Mono<ResponseEntity<Void>> createUser(@Valid @RequestBody CreateUserDto createUserDTO) {
+        logger.info("******************************-*");
+        logger.info("Creando Solicitud");
+        logger.info("************************");
         return userUseCase.saveUser(userMapper.toModel(createUserDTO))
                 .then(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
     }
@@ -35,6 +40,9 @@ public class ApiRest {
     @Operation(summary = "Obtener todos los usuarios")
     @GetMapping
     public Flux<UserDto> getAllUser() {
+        logger.info("***************************");
+        logger.info("Trayendo los usuarios");
+        logger.info("*****************************");
         return userUseCase.getAllUser()
                 .map(userMapper::toResponse);
     }
@@ -42,6 +50,9 @@ public class ApiRest {
     @Operation(summary = "Obtener usuario por número de identificación")
     @GetMapping("/{idNumber}")
     public Mono<ResponseEntity<UserDto>> getByIdNumber(@PathVariable("idNumber") long idNumber) {
+        logger.info("********************-*");
+        logger.info("Trayendo usuario por Identificacion");
+        logger.info("***********************--*");
         return userUseCase.getUserByIdNumber(idNumber)
                 .map(userMapper::toResponse)
                 .map(ResponseEntity::ok)

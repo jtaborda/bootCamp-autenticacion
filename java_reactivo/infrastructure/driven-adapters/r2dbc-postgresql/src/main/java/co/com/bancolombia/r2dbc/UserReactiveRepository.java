@@ -10,4 +10,5 @@ public interface UserReactiveRepository
         <userEntity, Long>, ReactiveQueryByExampleExecutor<userEntity> {
     Mono<userEntity> findByCorreo(String correo);
     Mono<userEntity>  findByDocumento(Long document);
+    Mono<userEntity> findById(Long id);
 }

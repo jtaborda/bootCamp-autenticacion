@@ -19,10 +19,9 @@ tasks.register('explodedJar', Copy) {
 }
 
 jar {
-    // To disable the *-plain.jar
-    enabled = false
+    archiveBaseName.set("autenticacion")
+    archiveVersion.set("1.0.0")
 }
-
 bootJar {
     // Sets output jar name
     archiveFileName = "${project.getParent().getName()}.${archiveExtension.get()}"

@@ -29,10 +29,10 @@ class UserRepositoryAdapterTest {
 
     @BeforeEach
     void setup() {
+        MockitoAnnotations.openMocks(this);
         when(transactionalOperator.transactional(any(Mono.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         adapter = new UserRepositoryAdapter(repository, mapper, transactionalOperator);
-
     }
 
     @Test

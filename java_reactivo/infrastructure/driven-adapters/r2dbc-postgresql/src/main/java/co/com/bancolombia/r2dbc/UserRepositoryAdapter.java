@@ -6,6 +6,8 @@ import co.com.bancolombia.r2dbc.entity.userEntity;
 import co.com.bancolombia.r2dbc.exception.UserNotFoundException;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
@@ -20,7 +22,7 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
 > implements UserRepository{
 
     private final TransactionalOperator transactionalOperator;
-
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryAdapter.class);
     public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity, User.class));
         this.transactionalOperator = transactionalOperator;
@@ -58,6 +60,9 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     }
     @Override
     public Mono<User> findByDocumento(Long document) {
+        logger.info("********************-*");
+        logger.info("Trayendo usuario por Identificacion");
+        logger.info("***********************--*");
         return repository.findByDocumento(document)
                 .map(entity -> mapper.map(entity, User.class));
     }

@@ -15,11 +15,13 @@ plugins {
 	id 'info.solidsoft.pitest' version "${pitestVersion}" apply false
 	id 'org.sonarqube' version "${sonarVersion}"
 	id 'jacoco'
+    id 'java'
 }
 dependencies {
-    implementation 'org.slf4j:slf4j-api:2.0.12'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+}
+jar {
+    archiveBaseName.set("autenticacion")
+    archiveVersion.set("1.0.0")
 }
 sonar {
     def modules = subprojects.projectDir.collect { "${it.toString().replace(project.projectDir.toString() + "/", "")}" }
@@ -37,5 +39,6 @@ sonar {
         property "sonar.externalIssuesReportPaths", "build/issues.json"
     }
 }
+
 
 apply from: './main.gradle'

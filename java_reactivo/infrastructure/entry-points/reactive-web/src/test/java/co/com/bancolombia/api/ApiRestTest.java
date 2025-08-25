@@ -36,7 +36,7 @@ class ApiRestTest {
     @Test
     void createUser_ShouldReturnCreated() {
         CreateUserDto createUserDto = new CreateUserDto(
-                "Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L);
+                "Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L);
 
         User user = new User();
 
@@ -55,7 +55,7 @@ class ApiRestTest {
     @Test
     void getAllUser_ShouldReturnUsers() {
         User user = new User();
-        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L);
+        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L);
 
         when(userUseCase.getAllUser()).thenReturn(Flux.just(user));
         when(userMapper.toResponse(user)).thenReturn(userDto);
@@ -73,7 +73,7 @@ class ApiRestTest {
     void getByIdNumber_UserExists_ShouldReturnUser() {
         long idNumber = 123L;
         User user = new User();
-        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L);
+        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L);
 
         when(userUseCase.getUserByIdNumber(idNumber)).thenReturn(Mono.just(user));
         when(userMapper.toResponse(user)).thenReturn(userDto);
