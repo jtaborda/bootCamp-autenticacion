@@ -21,4 +21,6 @@ public class User
     private String correo;
     private Long salario;
     private Long documento;
+    private Long idRol;
+    private String nombreRol;
 }

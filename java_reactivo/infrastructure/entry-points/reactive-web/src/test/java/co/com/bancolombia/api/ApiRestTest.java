@@ -51,7 +51,7 @@ class ApiRestTest {
 
         verify(userUseCase, times(1)).saveUser(user);
     }
-
+// se esta cuando exista correo
     @Test
     void getAllUser_ShouldReturnUsers() {
         User user = new User();

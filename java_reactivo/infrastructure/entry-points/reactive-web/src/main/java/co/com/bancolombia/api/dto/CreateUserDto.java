@@ -20,6 +20,7 @@ public record CreateUserDto(
         @Min(value = 0, message = "El salario no puede ser menor a 0")
         @Max(value = 15000000, message = "El salario no puede ser mayor a 15,000,000")
         Long salario,
-              Long documento
+        Long documento,
+        Long idRol
 ) {
 }

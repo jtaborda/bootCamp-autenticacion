@@ -1,5 +1,6 @@
 package co.com.bancolombia.r2dbc;
 
+import co.com.bancolombia.model.rol.gateways.RolRepository;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import co.com.bancolombia.r2dbc.entity.userEntity;
@@ -21,10 +22,14 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         UserReactiveRepository
 > implements UserRepository{
 
+    private final RolRepository rolRepository;
     private final TransactionalOperator transactionalOperator;
+
+
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryAdapter.class);
-    public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
+    public UserRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, RolRepository rolRepository, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity, User.class));
+        this.rolRepository = rolRepository;
         this.transactionalOperator = transactionalOperator;
     }
 
@@ -35,10 +40,26 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
          .as(transactionalOperator::transactional);//roolback
     }
     @Override
-    public Flux<User> getAllUser() {
-        return super.findAll();
-    }
+    public Flux<User> getAllUser()
+    {
+         return repository.findAll()
+                 .flatMap(entity ->
+                                 rolRepository.findById(entity.getIdRol())
+                     .map( rol-> new User(
+                             entity.getNombre(),
+                             entity.getApellido(),
+                             entity.getFechaNacimiento(),
+                             entity.getTelefono(),
+                             entity.getDireccion(),
+                             entity.getCorreo(),
+                             entity.getSalario(),
+                             entity.getDocumento(),
+                             rol.getId_rol(),
+                             rol.getNombre()
+                     ))
 
+                 );
+     }
     @Override
     public Mono<User>getUserByIdNumber(Long id) {
         return super.findById(id);

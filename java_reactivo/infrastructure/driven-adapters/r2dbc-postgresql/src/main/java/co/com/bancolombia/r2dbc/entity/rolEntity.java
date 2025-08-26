@@ -7,23 +7,13 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.Date;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("users")
-public class userEntity {
+@Table("rol")
+public class rolEntity {
     @Id
-    private Long id;
+    private Long id_rol;
     private String nombre;
-    private String apellido;
-    private String fechaNacimiento;
-    private Integer telefono;
-    private String direccion;
-    private Long salario;
-    private String correo;
-    private Long documento;
-    private Long idRol;
 }
