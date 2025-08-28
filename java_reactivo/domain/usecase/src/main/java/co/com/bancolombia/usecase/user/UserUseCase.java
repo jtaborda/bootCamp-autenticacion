@@ -36,4 +36,8 @@ public class UserUseCase {
     {
         return userRepository.deleteUserById(idNumber);
     }
+
+    public Mono<User> getUserByDocumento(Long idNumber){
+        return userRepository.findByDocumento(idNumber);
+    }
 }

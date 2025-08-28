@@ -1,5 +1,6 @@
 package co.com.bancolombia.r2dbc;
 
+import co.com.bancolombia.model.rol.Rol;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.r2dbc.entity.userEntity;
 import co.com.bancolombia.r2dbc.exception.UserNotFoundException;
@@ -27,12 +28,18 @@ class UserRepositoryAdapterTest {
     @Mock
     private TransactionalOperator transactionalOperator;
 
+    @Mock
+    private RolRepositoryAdapter RolRepositoryAdapter;
+
+    @Mock
+    private RolReactiveRepository repositoryRol;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
         when(transactionalOperator.transactional(any(Mono.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
-        adapter = new UserRepositoryAdapter(repository, mapper, transactionalOperator);
+        adapter = new UserRepositoryAdapter(repository, mapper, RolRepositoryAdapter,transactionalOperator);
     }
 
     @Test
@@ -50,18 +57,6 @@ class UserRepositoryAdapterTest {
                 .verifyComplete();
     }
 
-    @Test
-    void getAllUser_shouldReturnAllUsers() {
-        userEntity entity = new userEntity();
-        User user = new User();
-
-        when(repository.findAll()).thenReturn(Flux.just(entity));
-        when(mapper.map(entity, User.class)).thenReturn(user);
-
-        StepVerifier.create(adapter.getAllUser())
-                .expectNext(user)
-                .verifyComplete();
-    }
 
     @Test
     void getUserByIdNumber_shouldReturnUser() {

@@ -81,9 +81,7 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     }
     @Override
     public Mono<User> findByDocumento(Long document) {
-        logger.info("********************-*");
-        logger.info("Trayendo usuario por Identificacion");
-        logger.info("***********************--*");
+        logger.info("********************-*"); logger.info("Trayendo usuario por Documento"); logger.info("***********************--*");
         return repository.findByDocumento(document)
                 .map(entity -> mapper.map(entity, User.class));
     }

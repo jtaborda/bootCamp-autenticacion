@@ -19,3 +19,9 @@ docker run -it postgres:17 psql -U postgres
 
 
 docker start my_postgres
+
+
+
+
+1---  sudo service docker start
+2---  docker start my_postgres

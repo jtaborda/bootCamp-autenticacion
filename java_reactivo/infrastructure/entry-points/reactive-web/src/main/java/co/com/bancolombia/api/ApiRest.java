@@ -47,11 +47,11 @@ public class ApiRest {
                 .map(userMapper::toResponse);
     }
 
-    @Operation(summary = "Obtener usuario por número de identificación")
-    @GetMapping("/{idNumber}")
+    @Operation(summary = "Obtener usuario por número de Id")
+    @GetMapping("/x/{idNumber}")
     public Mono<ResponseEntity<UserDto>> getByIdNumber(@PathVariable("idNumber") long idNumber) {
         logger.info("********************-*");
-        logger.info("Trayendo usuario por Identificacion");
+        logger.info("Trayendo usuario por Id");
         logger.info("***********************--*");
         return userUseCase.getUserByIdNumber(idNumber)
                 .map(userMapper::toResponse)
@@ -66,5 +66,14 @@ public class ApiRest {
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @Operation(summary = "Obtener usuario por Documento")
+    @GetMapping("/{documento}")
+    public Mono<ResponseEntity<UserDto>> getByDocumento(@PathVariable("documento") long documento) {
+           logger.info("Trayendo usuario por Documento "); logger.info("*********************-**--*");
+        return userUseCase.getUserByDocumento(documento)
+                .map(userMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
 
 }
