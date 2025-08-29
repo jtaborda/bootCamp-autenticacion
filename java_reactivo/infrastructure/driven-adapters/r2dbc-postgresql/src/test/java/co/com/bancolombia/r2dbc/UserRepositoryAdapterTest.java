@@ -68,7 +68,7 @@ class UserRepositoryAdapterTest {
         when(repository.findById(id)).thenReturn(Mono.just(entity));
         when(mapper.map(entity, User.class)).thenReturn(user);
 
-        StepVerifier.create(adapter.getUserByIdNumber(id))
+        StepVerifier.create(adapter.getUserById(id))
                 .expectNext(user)
                 .verifyComplete();
     }

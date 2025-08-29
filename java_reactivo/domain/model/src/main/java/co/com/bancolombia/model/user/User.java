@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 public class User
 {
-
+    private Long id;
     private String nombre;
     private String apellido;
     private String fechaNacimiento;
@@ -23,4 +23,5 @@ public class User
     private Long documento;
     private Long idRol;
     private String nombreRol;
+
 }

@@ -48,7 +48,7 @@ public class ApiRest {
     }
 
     @Operation(summary = "Obtener usuario por número de Id")
-    @GetMapping("/x/{idNumber}")
+    @GetMapping("/id/{idNumber}")
     public Mono<ResponseEntity<UserDto>> getByIdNumber(@PathVariable("idNumber") long idNumber) {
         logger.info("********************-*");
         logger.info("Trayendo usuario por Id");

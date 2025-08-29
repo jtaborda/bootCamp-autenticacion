@@ -1,6 +1,7 @@
 package co.com.bancolombia.usecase.user;
 
 import co.com.bancolombia.model.exception.EmailAlreadyExistsException;
+import co.com.bancolombia.model.exception.UserNotFoundException;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +31,19 @@ public class UserUseCase {
         return userRepository.getAllUser();
     }
     public Mono<User> getUserByIdNumber(Long idNumber){
-        return userRepository.getUserByIdNumber(idNumber);
+        return userRepository.getUserById(idNumber)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("El usuario no existe")))
+                .map(user -> user);
     }
     public Mono<Void> deleteUserByCorreo(Long idNumber)
     {
         return userRepository.deleteUserById(idNumber);
     }
 
-    public Mono<User> getUserByDocumento(Long idNumber){
-        return userRepository.findByDocumento(idNumber);
+    public Mono<User> getUserByDocumento(Long idNumber) {
+        return userRepository.findByDocumento(idNumber)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("El usuario no existe")))
+                .map(user -> user);
     }
+
 }

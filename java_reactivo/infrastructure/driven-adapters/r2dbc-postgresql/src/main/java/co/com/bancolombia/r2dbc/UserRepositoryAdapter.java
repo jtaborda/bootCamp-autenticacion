@@ -33,7 +33,6 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         this.transactionalOperator = transactionalOperator;
     }
 
-
     @Override
     public Mono<User> saveUser(User user){
         return super.save(user)
@@ -46,6 +45,7 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
                  .flatMap(entity ->
                                  rolRepository.findById(entity.getIdRol())
                      .map( rol-> new User(
+                             entity.getId(),
                              entity.getNombre(),
                              entity.getApellido(),
                              entity.getFechaNacimiento(),
@@ -60,10 +60,6 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
 
                  );
      }
-    @Override
-    public Mono<User>getUserByIdNumber(Long id) {
-        return super.findById(id);
-    }
 
     @Override
     public Mono<Void> deleteUserById(Long id) {
@@ -83,6 +79,46 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<User> findByDocumento(Long document) {
         logger.info("********************-*"); logger.info("Trayendo usuario por Documento"); logger.info("***********************--*");
         return repository.findByDocumento(document)
-                .map(entity -> mapper.map(entity, User.class));
+                .flatMap(entity ->
+                        rolRepository.findById(entity.getIdRol())
+                                .map( rol-> new User(
+                                        entity.getId(),
+                                        entity.getNombre(),
+                                        entity.getApellido(),
+                                        entity.getFechaNacimiento(),
+                                        entity.getTelefono(),
+                                        entity.getDireccion(),
+                                        entity.getCorreo(),
+                                        entity.getSalario(),
+                                        entity.getDocumento(),
+                                        rol.getId_rol(),
+                                        rol.getNombre()
+                                ))
+
+                );
+    }
+
+
+    @Override
+    public Mono<User> getUserById(Long document) {
+        logger.info("********************-*"); logger.info("Trayendo usuario por ID"); logger.info("***********************--*");
+        return repository.findById(document)
+                .flatMap(entity ->
+                        rolRepository.findById(entity.getIdRol())
+                                .map( rol-> new User(
+                                        entity.getId(),
+                                        entity.getNombre(),
+                                        entity.getApellido(),
+                                        entity.getFechaNacimiento(),
+                                        entity.getTelefono(),
+                                        entity.getDireccion(),
+                                        entity.getCorreo(),
+                                        entity.getSalario(),
+                                        entity.getDocumento(),
+                                        rol.getId_rol(),
+                                        rol.getNombre()
+                                ))
+
+                );
     }
 }
