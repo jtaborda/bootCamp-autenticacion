@@ -3,6 +3,9 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDTOMapper;
+import co.com.bancolombia.api.security.JwtUtil;
+import co.com.bancolombia.model.exception.InvalidJwtException;
+import co.com.bancolombia.model.exception.UserNotFoundException;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,13 +29,26 @@ public class ApiRest {
     private static final Logger logger = LoggerFactory.getLogger(ApiRest.class);
     private final UserUseCase userUseCase;
     private final UserDTOMapper userMapper ;
+    private final JwtUtil jwtUtil;
+
 
     @Operation(summary = "Crear un nuevo usuario")
     @PostMapping
-    public Mono<ResponseEntity<Void>> createUser(@Valid @RequestBody CreateUserDto createUserDTO) {
+    public Mono<ResponseEntity<Void>> createUser(
+            @Valid @RequestBody CreateUserDto createUserDTO,
+            @RequestHeader("Authorization") String authHeader) {
+
         logger.info("******************************-*");
-        logger.info("Creando Solicitud");
+        logger.info("Creando Usuario");
         logger.info("************************");
+
+        String token = authHeader.replace("Bearer ", "");
+        String nombreRol = jwtUtil.extractRol(token);
+
+        if (!"Administrador".equalsIgnoreCase(nombreRol) && !"Asesor".equalsIgnoreCase(nombreRol)) {
+            return Mono.error(new InvalidJwtException("JWT Invalida"));
+        }
+
         return userUseCase.saveUser(userMapper.toModel(createUserDTO))
                 .then(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
     }

@@ -35,6 +35,7 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<User> saveUser(User user){
+        user.setPassword(user.getDocumento().toString());
         return super.save(user)
          .as(transactionalOperator::transactional);//roolback
     }
@@ -55,7 +56,8 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
                              entity.getSalario(),
                              entity.getDocumento(),
                              rol.getId_rol(),
-                             rol.getNombre()
+                             rol.getNombre(),
+                             entity.getPassword()
                      ))
 
                  );
@@ -77,7 +79,7 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
     }
     @Override
     public Mono<User> findByDocumento(Long document) {
-        logger.info("********************-*"); logger.info("Trayendo usuario por Documento"); logger.info("***********************--*");
+        logger.info("********************-*"); logger.info("Trayendo usuario por Documento Adapter"); logger.info("***********************--*");
         return repository.findByDocumento(document)
                 .flatMap(entity ->
                         rolRepository.findById(entity.getIdRol())
@@ -92,7 +94,8 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
                                         entity.getSalario(),
                                         entity.getDocumento(),
                                         rol.getId_rol(),
-                                        rol.getNombre()
+                                        rol.getNombre(),
+                                        entity.getPassword()
                                 ))
 
                 );
@@ -116,7 +119,32 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
                                         entity.getSalario(),
                                         entity.getDocumento(),
                                         rol.getId_rol(),
-                                        rol.getNombre()
+                                        rol.getNombre(),
+                                        entity.getPassword()
+                                ))
+
+                );
+    }
+
+    @Override
+    public Mono<User> findByCorreoAndPassword(String correo, String password) {
+        logger.info("********************-*"); logger.info("Trayendo usuario por correo y password"); logger.info("***********************--*");
+        return repository.findByCorreoAndPassword(correo,password)
+                .flatMap(entity ->
+                        rolRepository.findById(entity.getIdRol())
+                                .map( rol-> new User(
+                                        entity.getId(),
+                                        entity.getNombre(),
+                                        entity.getApellido(),
+                                        entity.getFechaNacimiento(),
+                                        entity.getTelefono(),
+                                        entity.getDireccion(),
+                                        entity.getCorreo(),
+                                        entity.getSalario(),
+                                        entity.getDocumento(),
+                                        rol.getId_rol(),
+                                        rol.getNombre(),
+                                        entity.getPassword()
                                 ))
 
                 );

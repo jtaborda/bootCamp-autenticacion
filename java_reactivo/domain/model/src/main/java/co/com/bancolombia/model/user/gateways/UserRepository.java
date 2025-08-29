@@ -12,4 +12,5 @@ public interface UserRepository {
     Mono<Boolean> getUserByCorreo(String correo);
     Mono<User> findByDocumento(Long id);
     Mono<User> getUserById(Long id);
+    Mono<User> findByCorreoAndPassword(String correo,String Documento);
 }

@@ -12,5 +12,5 @@ public interface UserReactiveRepository
     Mono<userEntity> findByCorreo(String correo);
     Mono<userEntity> findByDocumento(Long document);
     Mono<userEntity> findById(Long id);
-
+    Mono<userEntity> findByCorreoAndPassword(String correo, String password);
 }

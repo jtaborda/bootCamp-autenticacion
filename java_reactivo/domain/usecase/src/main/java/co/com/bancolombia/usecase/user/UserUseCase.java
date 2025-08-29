@@ -1,6 +1,7 @@
 package co.com.bancolombia.usecase.user;
 
 import co.com.bancolombia.model.exception.EmailAlreadyExistsException;
+import co.com.bancolombia.model.exception.InvalidPasswordException;
 import co.com.bancolombia.model.exception.UserNotFoundException;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
@@ -50,5 +51,13 @@ public class UserUseCase {
                 .switchIfEmpty(Mono.error(new UserNotFoundException("El usuario no existe")))
                 .map(user -> user);
     }
+
+
+    public Mono<User> findByCorreoAndPassword(String correo, String password) {
+        return userRepository.findByCorreoAndPassword(correo.toLowerCase(), password)
+                .switchIfEmpty(Mono.error(new UserNotFoundException(
+                        "Usuario o Password Incorrectos")));
+    }
+
 
 }

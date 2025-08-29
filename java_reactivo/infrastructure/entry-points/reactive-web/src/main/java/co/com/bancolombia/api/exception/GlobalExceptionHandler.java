@@ -1,6 +1,7 @@
 package co.com.bancolombia.api.exception;
 
 import co.com.bancolombia.model.exception.EmailAlreadyExistsException;
+import co.com.bancolombia.model.exception.InvalidJwtException;
 import co.com.bancolombia.model.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +39,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<String> handleInvalidJwt(InvalidJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ex.getMessage());
+    }
 }

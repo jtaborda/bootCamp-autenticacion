@@ -23,5 +23,5 @@ public class User
     private Long documento;
     private Long idRol;
     private String nombreRol;
-
+    private String password;
 }

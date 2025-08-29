@@ -26,4 +26,5 @@ public class userEntity {
     private String correo;
     private Long documento;
     private Long idRol;
+    private String password;
 }

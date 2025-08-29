@@ -8,7 +8,8 @@ public record UserDto(
                       String direccion,
                       String correo,
                       Long salario,
-                      Long documento,Long idRol,
+                      Long documento,
+                      Long idRol,
                       String nombreRol
 
 ) {
