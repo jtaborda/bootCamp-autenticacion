@@ -14,16 +14,21 @@ public class UserUseCase {
 
 
     private final UserRepository userRepository;
+
     public Mono<Void> saveUser(User user) {
-        return userRepository.getUserByCorreo(user.getCorreo())
-                .flatMap(exists -> {
-                    if (exists) {
+        return userRepository.getUserByCorreo(user.getCorreo().toLowerCase())
+                .flatMap(correoExiste -> {
+                    if (correoExiste) {
                         return Mono.error(new EmailAlreadyExistsException(
                                 "El correo ya está registrado: " + user.getCorreo()));
                     }
-
-                    return userRepository.saveUser(user).then();
-                });
+                    return userRepository.findByDocumento(user.getDocumento())
+                            .flatMap(documentoExiste ->
+                                    Mono.error(new EmailAlreadyExistsException(
+                                            "El documento ya está registrado: " + user.getDocumento()))
+                            )
+                            .switchIfEmpty(userRepository.saveUser(user).then());
+                }).then();
     }
 
     public Flux<User> getAllUser()
