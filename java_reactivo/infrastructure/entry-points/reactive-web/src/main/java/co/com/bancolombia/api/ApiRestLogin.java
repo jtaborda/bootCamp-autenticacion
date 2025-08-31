@@ -4,6 +4,7 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.dto.LoginDto;
 import co.com.bancolombia.api.mapper.UserDTOMapper;
 import co.com.bancolombia.usecase.user.UserUseCase;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class ApiRestLogin {
     private final UserDTOMapper userMapper ;
     private final JwtUtil jwtUtil;
 
+    @Operation(summary = "Obtener Logueo")
     @PostMapping
     public Mono<ResponseEntity<Map<String, Object>>> login(@RequestBody LoginDto loginDto) {
         return userUseCase.findByCorreoAndPassword(loginDto.correo(), loginDto.password())
