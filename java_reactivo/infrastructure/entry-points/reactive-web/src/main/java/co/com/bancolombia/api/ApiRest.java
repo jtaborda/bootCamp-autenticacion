@@ -46,7 +46,7 @@ public class ApiRest {
         String nombreRol = jwtUtil.extractRol(token);
 
         if (!"Administrador".equalsIgnoreCase(nombreRol) && !"Asesor".equalsIgnoreCase(nombreRol)) {
-            return Mono.error(new InvalidJwtException("JWT Invalida"));
+            return Mono.error(new InvalidJwtException("Solo admin o Asesor, pueden crear un usuario"));
         }
 
         return userUseCase.saveUser(userMapper.toModel(createUserDTO))

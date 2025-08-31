@@ -3,6 +3,8 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDTOMapper;
+import co.com.bancolombia.api.security.JwtUtil;
+import co.com.bancolombia.model.exception.InvalidJwtException;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,34 +30,68 @@ class ApiRestTest {
     @InjectMocks
     private ApiRest apiRest;
 
+    @Mock
+    private JwtUtil jwtUtil;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void createUser_ShouldReturnCreated() {
+    void createUser_ShouldReturnCreated_WhenUserIsAuthorized() {
+        // Arrange
         CreateUserDto createUserDto = new CreateUserDto(
-                "Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L,1L);
+                "Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L, 500L, 1L);
 
         User user = new User();
+        String token = "mockedToken";
+        String authHeader = "Bearer " + token;
 
         when(userMapper.toModel(createUserDto)).thenReturn(user);
         when(userUseCase.saveUser(user)).thenReturn(Mono.empty());
+        when(jwtUtil.extractRol(token)).thenReturn("Administrador");
 
-        Mono<ResponseEntity<Void>> response = apiRest.createUser(createUserDto);
+        // Act
+        Mono<ResponseEntity<Void>> response = apiRest.createUser(createUserDto, authHeader);
 
+        // Assert
         StepVerifier.create(response)
                 .expectNextMatches(resp -> resp.getStatusCode() == HttpStatus.CREATED)
                 .verifyComplete();
 
         verify(userUseCase, times(1)).saveUser(user);
+        verify(jwtUtil, times(1)).extractRol(token);
     }
-// se esta cuando exista correo
+
+    @Test
+    void createUser_ShouldReturnError_WhenUserIsNotAuthorized() {
+        // Arrange
+        CreateUserDto createUserDto = new CreateUserDto(
+                "Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L, 500L, 1L);
+
+        String token = "mockedToken";
+        String authHeader = "Bearer " + token;
+
+        when(jwtUtil.extractRol(token)).thenReturn("Usuario"); // rol no permitido
+
+        // Act
+        Mono<ResponseEntity<Void>> response = apiRest.createUser(createUserDto, authHeader);
+
+        // Assert
+        StepVerifier.create(response)
+                .expectError(InvalidJwtException.class)
+                .verify();
+
+        verify(userUseCase, never()).saveUser(any());
+        verify(jwtUtil, times(1)).extractRol(token);
+    }
+
+    // se esta cuando exista correo
     @Test
     void getAllUser_ShouldReturnUsers() {
         User user = new User();
-        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L,1L,"Administrador");
+        UserDto userDto = new UserDto(1L, "Andre", "perez", "01/01/2021", 11, "calle123", "juan@example.com",500L,1111L,1L,"Administrador");
 
         when(userUseCase.getAllUser()).thenReturn(Flux.just(user));
         when(userMapper.toResponse(user)).thenReturn(userDto);
@@ -73,7 +109,7 @@ class ApiRestTest {
     void getByIdNumber_UserExists_ShouldReturnUser() {
         long idNumber = 123L;
         User user = new User();
-        UserDto userDto = new UserDto("Juan", "Perez", "1990-01-01", 123456789, "Calle 123", "juan@example.com", 5000000L,500L,1L,"Administrador");
+        UserDto userDto = new UserDto(1L, "Andre", "perez", "01/01/2021", 11, "calle123", "juan@example.com",500L,1111L,1L,"Administrador");
 
         when(userUseCase.getUserByIdNumber(idNumber)).thenReturn(Mono.just(user));
         when(userMapper.toResponse(user)).thenReturn(userDto);
