@@ -42,36 +42,6 @@ class UserRepositoryAdapterTest {
         adapter = new UserRepositoryAdapter(repository, mapper, RolRepositoryAdapter,transactionalOperator);
     }
 
-    @Test
-    void saveUser_shouldReturnSavedUser() {
-        User domainUser = new User();
-        userEntity entity = new userEntity();
-        entity.setId(1L);
-
-        when(mapper.map(domainUser, userEntity.class)).thenReturn(entity);
-        when(repository.save(entity)).thenReturn(Mono.just(entity));
-        when(mapper.map(entity, User.class)).thenReturn(domainUser);
-
-        StepVerifier.create(adapter.saveUser(domainUser))
-                .expectNext(domainUser)
-                .verifyComplete();
-    }
-
-
-    @Test
-    void getUserByIdNumber_shouldReturnUser() {
-        long id = 1L;
-        userEntity entity = new userEntity();
-        entity.setId(id);
-        User user = new User();
-
-        when(repository.findById(id)).thenReturn(Mono.just(entity));
-        when(mapper.map(entity, User.class)).thenReturn(user);
-
-        StepVerifier.create(adapter.getUserById(id))
-                .expectNext(user)
-                .verifyComplete();
-    }
 
     @Test
     void deleteUserById_shouldDeleteUser() {

@@ -5,7 +5,6 @@ import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDTOMapper;
 import co.com.bancolombia.api.security.JwtUtil;
 import co.com.bancolombia.model.exception.InvalidJwtException;
-import co.com.bancolombia.model.exception.UserNotFoundException;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

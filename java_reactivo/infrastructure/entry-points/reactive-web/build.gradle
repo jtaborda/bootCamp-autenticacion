@@ -14,3 +14,7 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 }
+jar {
+    archiveBaseName.set("entry-points")
+    archiveVersion.set("1.0.0")
+}

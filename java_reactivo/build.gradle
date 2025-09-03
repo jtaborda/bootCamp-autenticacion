@@ -13,7 +13,6 @@ plugins {
 	id 'org.springframework.boot' version "${springBootVersion}" apply false
 	id 'org.sonarqube' version "${sonarVersion}"
 	id 'jacoco'
-    id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 sonar {

@@ -2,9 +2,6 @@ package co.com.bancolombia.api.dto;
 
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 public record CreateUserDto(
         @NotBlank(message = "El nombre no puede estar vacío")
          String nombre,
