@@ -1,14 +1,20 @@
 spring:
-  application:
-    name: servicio-autenticacion
-
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/postgres
+    url: r2dbc:postgresql://db:5432/postgres
     username: postgres
     password: postgres
+  sql:
+    init:
+      mode: always
+      platform: postgres
 
-  level:
-    root: INFO
-    org.springframework.r2dbc: DEBUG
-    org.springframework.data.r2dbc: DEBUG
-    org.flywaydb: DEBUG
+server:
+  port: 8080
+
+adapter:
+  restconsumer:
+    timeout: 5000
+    url: "http://backend:8080"
+
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
